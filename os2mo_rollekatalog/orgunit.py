@@ -36,7 +36,7 @@ async def get_org_unit(
     ad_itsystem_user_key: str,
     fk_itsystem_user_key: str,
     root_org_unit: UUID,
-    exclude_unit_type: UUID | None,
+    exclude_org_unit_level: UUID | None,
     org_unit_uuid: UUID,
     external_roots: list[UUID],
 ) -> OrgUnit:
@@ -56,19 +56,22 @@ async def get_org_unit(
         raise WillNotSync("Org unit does not exist now or in the future.")
 
     if (
-        exclude_unit_type
-        and org_unit.unit_type
-        and org_unit.unit_type.uuid == exclude_unit_type
+        exclude_org_unit_level
+        and org_unit.org_unit_level
+        and org_unit.org_unit_level.uuid == exclude_org_unit_level
     ):
         raise WillNotSync(
-            f"Skipping sync for org_unit, due to unit_type filter: {org_unit.uuid}"
+            f"Skipping sync for org_unit, due to org_unit_level filter: {org_unit.uuid}"
         )
 
-    if exclude_unit_type and org_unit.ancestors:
+    if exclude_org_unit_level and org_unit.ancestors:
         for ancestor in org_unit.ancestors:
-            if ancestor.unit_type and ancestor.unit_type.uuid == exclude_unit_type:
+            if (
+                ancestor.org_unit_level
+                and ancestor.org_unit_level.uuid == exclude_org_unit_level
+            ):
                 raise WillNotSync(
-                    f"Skipping sync for org_unit {org_unit.uuid}, because ancestor {ancestor.uuid} has excluded unit_type."
+                    f"Skipping sync for org_unit {org_unit.uuid}, because ancestor {ancestor.uuid} has excluded org_unit_level."
                 )
 
     if org_unit.uuid == root_org_unit:
@@ -152,7 +155,7 @@ async def sync_org_unit(
     ad_itsystem_user_key: str,
     fk_itsystem_user_key: str,
     root_org_unit: UUID,
-    exclude_unit_type: UUID | None,
+    exclude_org_unit_level: UUID | None,
     org_unit_uuid: UUID,
     external_roots: list[UUID],
 ) -> None:
@@ -163,7 +166,7 @@ async def sync_org_unit(
             ad_itsystem_user_key,
             fk_itsystem_user_key,
             root_org_unit,
-            exclude_unit_type or None,
+            exclude_org_unit_level or None,
             org_unit_uuid,
             external_roots,
         )
@@ -198,7 +201,7 @@ async def sync_org_unit(
                 ad_itsystem_user_key,
                 fk_itsystem_user_key,
                 root_org_unit,
-                exclude_unit_type,
+                exclude_org_unit_level,
                 child_uuid,
                 external_roots,
             )

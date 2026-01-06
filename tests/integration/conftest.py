@@ -23,7 +23,7 @@ def root_uuid():
 
 
 @pytest.fixture
-def exclude_unit_type():
+def exclude_org_unit_level():
     return uuid4()
 
 
@@ -36,7 +36,7 @@ def external_roots():
 async def _app(
     monkeypatch: MonkeyPatch,
     root_uuid: UUID,
-    exclude_unit_type: UUID,
+    exclude_org_unit_level: UUID,
     external_roots: list[UUID],
 ) -> FastAPI:
     monkeypatch.setenv("ROLLEKATALOG_URL", "http://example.org")
@@ -45,7 +45,7 @@ async def _app(
     monkeypatch.setenv("SYNC_TITLES", "false")
     monkeypatch.setenv("AD_ITSYSTEM_USER_KEY", "Active Directory")
     monkeypatch.setenv("FK_ITSYSTEM_USER_KEY", "FK ORG")
-    monkeypatch.setenv("EXCLUDE_UNIT_TYPE", str(exclude_unit_type))
+    monkeypatch.setenv("EXCLUDE_ORG_UNIT_LEVEL", str(exclude_org_unit_level))
     monkeypatch.setenv("EXTERNAL_ROOTS", json.dumps(external_roots))
 
     app = create_app()
