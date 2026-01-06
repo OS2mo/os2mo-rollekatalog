@@ -20,21 +20,21 @@ async def test_too_much(
     test_client: AsyncClient,
     graphql_client: GraphQLClient,
     root_uuid: uuid.UUID,
-    exclude_unit_type: uuid.UUID,
+    exclude_org_unit_level: uuid.UUID,
     external_roots: list[uuid.UUID],
 ) -> None:
     # Create org hierarchy
     org_unit_type_uuid = (
         (await graphql_client._testing__get_org_unit_type()).objects[0].uuid
     )
-    org_unit_type_facet_uuid = (
-        (await graphql_client._testing__get_org_unit_type_facet_u_u_i_d())
+    org_unit_level_facet_uuid = (
+        (await graphql_client._testing__get_org_unit_level_facet_u_u_i_d())
         .objects[0]
         .uuid
     )
-    exclude_unit_type_uuid = (
-        await graphql_client._testing__create_org_unit_type(
-            org_unit_type_facet_uuid, exclude_unit_type
+    exclude_org_unit_level_uuid = (
+        await graphql_client._testing__create_class(
+            org_unit_level_facet_uuid, exclude_org_unit_level
         )
     ).uuid
     await graphql_client._testing__create_org_unit_root(
@@ -74,7 +74,8 @@ async def test_too_much(
         await graphql_client._testing__create_org_unit(
             name="Layer 1 - Unit 3",
             parent=root_uuid,
-            org_unit_type=exclude_unit_type_uuid,
+            org_unit_type=org_unit_type_uuid,
+            org_unit_level=exclude_org_unit_level_uuid,
         )
     ).uuid
     layer2_3 = (

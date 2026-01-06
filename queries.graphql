@@ -145,12 +145,12 @@ query GetOrgUnit(
         parent {
           uuid
         }
-        unit_type {
+        org_unit_level {
           uuid
         }
         ancestors {
           uuid
-          unit_type {
+          org_unit_level {
             uuid
           }
         }
@@ -227,17 +227,17 @@ query _Testing_GetOrgUnitType {
   }
 }
 
-query _Testing_GetOrgUnitTypeFacetUUID {
-  facets(filter: {user_keys: "org_unit_type"}) {
+query _Testing_GetOrgUnitLevelFacetUUID {
+  facets(filter: {user_keys: "org_unit_level"}) {
     objects {
       uuid
     }
   }
 }
 
-mutation _Testing_CreateOrgUnitType($facet_uuid: UUID!, $uuid: UUID!) {
+mutation _Testing_CreateClass($name: String = "Udgået", $facet_uuid: UUID!, $uuid: UUID!) {
   class_create(
-    input: {name: "Udgået", user_key: "Udgået", facet_uuid: $facet_uuid, uuid: $uuid, validity: {from: "2010-02-03"}}
+    input: {name: $name, user_key: $name, facet_uuid: $facet_uuid, uuid: $uuid, validity: {from: "2010-02-03"}}
   ) {
     uuid
   }
@@ -283,12 +283,13 @@ mutation _Testing_CreateOrgUnitRoot($name: String!, $root_uuid: UUID!, $org_unit
 }
 
 
-mutation _Testing_CreateOrgUnit($name: String!, $parent: UUID!, $org_unit_type: UUID!) {
+mutation _Testing_CreateOrgUnit($name: String!, $parent: UUID!, $org_unit_type: UUID!, $org_unit_level: UUID) {
   org_unit_create(
     input: {
       name: $name,
       parent: $parent,
       org_unit_type: $org_unit_type,
+      org_unit_level: $org_unit_level,
       validity: {from: "2010-02-03"},
     },
   ) {
