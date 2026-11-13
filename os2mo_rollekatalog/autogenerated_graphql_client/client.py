@@ -300,7 +300,7 @@ class GraphQLClient(AsyncBaseClient):
         query = gql(
             """
             query GetUuidsForItUser($uuid: UUID!) {
-              itusers(filter: {uuids: [$uuid]}) {
+              itusers(filter: {uuids: [$uuid], from_date: null, to_date: null}) {
                 objects {
                   validities(start: null, end: null) {
                     person {
