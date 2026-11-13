@@ -394,6 +394,12 @@ mutation _Testing_UpdateItUser($input: ITUserUpdateInput!) {
   }
 }
 
+mutation _Testing_TerminateItUser($input: ITUserTerminateInput!) {
+  ituser_terminate(input: $input) {
+    uuid
+  }
+}
+
 mutation _Testing_CreateEngagement($input: EngagementCreateInput!) {
   engagement_create(input: $input) {
     uuid
